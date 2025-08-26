@@ -1,0 +1,39 @@
+THE NEW SOCIAL NETWORK PLATFORM:
+
+-> database info:
+
+2025-08-26T18:36:38.213+05:30  INFO 28364 --- [the-new-social-network] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-26T18:36:39.626+05:30  INFO 28364 --- [the-new-social-network] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: create table apprentices (id varchar(255) not null, mentor_id varchar(255) not null, profile_id varchar(255) not null, primary key (id))
+Hibernate: create table mentors (id varchar(255) not null, profile_id varchar(255) not null, primary key (id))
+Hibernate: create table profiles (id varchar(255) not null, bio varchar(255), contact bigint, created_at timestamp(6), last_updated_at timestamp(6), password varchar(255), profile_url varchar(255), username varchar(255) not null, primary key (id))
+Hibernate: create table project_members (id varchar(255) not null, created_at timestamp(6), designation varchar(255), joined_at varchar(255), last_updated_at timestamp(6), role varchar(255), status varchar(255), profile_id varchar(255) not null, project_id varchar(255) not null, primary key (id))
+Hibernate: create table projects (id varchar(255) not null, created_at timestamp(6), description varchar(255), last_updated_at timestamp(6), owner_id varchar(255), project_url varchar(255), title varchar(255) not null, primary key (id))
+Hibernate: alter table if exists profiles drop constraint if exists UK1j06d9y25sj76kmjlgf9n5enc
+2025-08-26T18:36:39.949+05:30  WARN 28364 --- [the-new-social-network] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-08-26T18:36:39.950+05:30  WARN 28364 --- [the-new-social-network] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk1j06d9y25sj76kmjlgf9n5enc" of relation "profiles" does not exist, skipping
+Hibernate: alter table if exists profiles add constraint UK1j06d9y25sj76kmjlgf9n5enc unique (profile_url)
+Hibernate: alter table if exists profiles drop constraint if exists UKgkg1kpmjy7f1hm6ugsoxmgisq
+2025-08-26T18:36:39.960+05:30  WARN 28364 --- [the-new-social-network] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-08-26T18:36:39.961+05:30  WARN 28364 --- [the-new-social-network] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "ukgkg1kpmjy7f1hm6ugsoxmgisq" of relation "profiles" does not exist, skipping
+Hibernate: alter table if exists profiles add constraint UKgkg1kpmjy7f1hm6ugsoxmgisq unique (username)
+Hibernate: alter table if exists projects drop constraint if exists UKjqi0jjcw95gli6nfwnwpeblpb
+2025-08-26T18:36:39.973+05:30  WARN 28364 --- [the-new-social-network] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-08-26T18:36:39.973+05:30  WARN 28364 --- [the-new-social-network] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "ukjqi0jjcw95gli6nfwnwpeblpb" of relation "projects" does not exist, skipping
+Hibernate: alter table if exists projects add constraint UKjqi0jjcw95gli6nfwnwpeblpb unique (project_url)
+Hibernate: alter table if exists apprentices add constraint FK7txnm6peimc24r5orceu0j1d5 foreign key (mentor_id) references mentors
+Hibernate: alter table if exists apprentices add constraint FK11wdnjiwj0asnu5b5tl7xs3iq foreign key (profile_id) references profiles
+Hibernate: alter table if exists mentors add constraint FKdgwo0l2xl24gln1xotevkk7ii foreign key (profile_id) references profiles
+Hibernate: alter table if exists project_members add constraint FKdrb3c22k5jyj78j5i0ysbqddf foreign key (profile_id) references profiles
+Hibernate: alter table if exists project_members add constraint FKdki1sp2homqsdcvqm9yrix31g foreign key (project_id) references projects
+2025-08-26T18:36:40.040+05:30  INFO 28364 --- [the-new-social-network] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-26T18:36:40.154+05:30  WARN 28364 --- [the-new-social-network] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-26T18:36:40.904+05:30  INFO 28364 --- [the-new-social-network] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-08-26T18:36:40.914+05:30  INFO 28364 --- [the-new-social-network] [           main] c.r.t.TheNewSocialNetworkApplication     : Started TheNewSocialNetworkApplication in 6.919 seconds (process running for 7.627)

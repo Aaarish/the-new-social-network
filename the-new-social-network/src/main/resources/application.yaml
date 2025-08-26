@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: the-new-social-network
+  datasource:
+    url: jdbc:postgresql://localhost:5432/the_new_social_network_db
+    username: postgres
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
