@@ -13,3 +13,9 @@ spring:
     hibernate:
       ddl-auto: update
 
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: the_new_social_network_mongodb
+

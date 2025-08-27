@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,8 @@ public class Mentor {
     private ProfileEntity profile;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "mentor", orphanRemoval = true)
-    private List<Apprentice> apprentices;
+    @Builder.Default
+    private List<Apprentice> apprentices = new ArrayList<>();
 
     private LocalDateTime createdAt;
     @Setter private LocalDateTime lastUpdatedAt;

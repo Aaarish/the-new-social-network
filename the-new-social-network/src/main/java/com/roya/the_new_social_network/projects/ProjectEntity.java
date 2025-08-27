@@ -1,9 +1,13 @@
 package com.roya.the_new_social_network.projects;
 
+import com.roya.the_new_social_network.projects.access.ProjectAccessPolicy;
+import com.roya.the_new_social_network.projects.applications.Application;
+import com.roya.the_new_social_network.projects.members.ProjectMember;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +29,12 @@ public class ProjectEntity {
     private String ownerId;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
-    private List<ProjectMember> projectMembers; //project participants, project watchers, project applicants
+    @Builder.Default
+    private List<ProjectMember> projectMembers = new ArrayList<>(); //project participants, project watchers, project applicants
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
+    @Builder.Default
+    private List<Application> applications = new ArrayList<>();
 
     private LocalDateTime createdAt;
     @Setter private LocalDateTime lastUpdatedAt;

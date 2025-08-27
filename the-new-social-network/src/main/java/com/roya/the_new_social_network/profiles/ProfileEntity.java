@@ -2,11 +2,13 @@ package com.roya.the_new_social_network.profiles;
 
 import com.roya.the_new_social_network.apprentices.Apprentice;
 import com.roya.the_new_social_network.apprentices.Mentor;
-import com.roya.the_new_social_network.projects.ProjectMember;
+import com.roya.the_new_social_network.projects.members.ProjectMember;
+import com.roya.the_new_social_network.projects.applications.Application;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,13 +32,20 @@ public class ProfileEntity {
 
     //list of project memberships
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile", orphanRemoval = true)
-    private List<ProjectMember> projectMembers;
+    @Builder.Default
+    private List<ProjectMember> projectMembers = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile", orphanRemoval = true)
-    private List<Mentor> mentors;
+    @Builder.Default
+    private List<Mentor> mentors = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile", orphanRemoval = true)
-    private List<Apprentice> apprentices;
+    @Builder.Default
+    private List<Apprentice> apprentices = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile", orphanRemoval = true)
+    @Builder.Default
+    private List<Application> applications = new ArrayList<>();
 
     private LocalDateTime createdAt;
     @Setter private LocalDateTime lastUpdatedAt;
