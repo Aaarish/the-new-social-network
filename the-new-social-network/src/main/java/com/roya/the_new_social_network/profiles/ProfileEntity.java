@@ -1,7 +1,9 @@
 package com.roya.the_new_social_network.profiles;
 
-import com.roya.the_new_social_network.apprentices.Apprentice;
-import com.roya.the_new_social_network.apprentices.Mentor;
+import com.roya.the_new_social_network.apprenticeship.Apprentice;
+import com.roya.the_new_social_network.apprenticeship.Mentor;
+import com.roya.the_new_social_network.forum.posts.Post;
+import com.roya.the_new_social_network.profiles.preferences.Preference;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 import com.roya.the_new_social_network.projects.applications.Application;
 import jakarta.persistence.*;
@@ -9,7 +11,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "profiles")
@@ -27,8 +31,15 @@ public class ProfileEntity {
     private Long contact;
     @Setter private String bio;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "profile")
+    @Builder.Default
+    Set<Preference> preferences = new HashSet<>();
+
     @Column(name = "profile_url", unique = true) // e.g., www.roya.com/username
     private String profileUrl;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "author")
+    private List<Post> posts;
 
     //list of project memberships
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile", orphanRemoval = true)

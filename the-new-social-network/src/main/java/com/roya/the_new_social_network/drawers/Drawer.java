@@ -1,7 +1,9 @@
 package com.roya.the_new_social_network.drawers;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.roya.the_new_social_network.global.ComponentVisibility;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,9 +16,18 @@ import java.util.List;
 @Getter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Drawer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
+
+    @Column(name = "resource", nullable = false)
+    private Integer resourceTypeId;
+
+    @Column(name = "resource_id", nullable = false)
+    private String resourceId;
+
     @Setter private String shelfId;
+
+    @Enumerated(EnumType.STRING)
+    private ComponentVisibility visibility;
 
     @DocumentReference(lazy = true)
     @Builder.Default
