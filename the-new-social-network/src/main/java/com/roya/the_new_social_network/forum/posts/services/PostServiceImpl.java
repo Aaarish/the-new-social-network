@@ -1,5 +1,7 @@
-package com.roya.the_new_social_network.forum.posts;
+package com.roya.the_new_social_network.forum.posts.services;
 
+import com.roya.the_new_social_network.forum.posts.entities.Post;
+import com.roya.the_new_social_network.forum.posts.dao.PostDao;
 import com.roya.the_new_social_network.profiles.ProfileDao;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectDao;
@@ -17,11 +19,13 @@ public class PostServiceImpl implements PostService {
     private final ProfileDao profileDao;
 
     @Override
-    public void createPost(Post post) {
+    public Post createPost(Post post) {
         Post savedPost = postDao.save(post);
 
 
 //        mongoTemplate.dump(post); needs to dump the post in the mongodb collection to store it without any index or whatever
+
+        return savedPost;
     }
 
     @Override

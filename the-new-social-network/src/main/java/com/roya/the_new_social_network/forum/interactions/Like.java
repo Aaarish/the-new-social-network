@@ -1,6 +1,6 @@
 package com.roya.the_new_social_network.forum.interactions;
 
-import com.roya.the_new_social_network.forum.posts.Post;
+import com.roya.the_new_social_network.forum.posts.entities.Post;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

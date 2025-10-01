@@ -1,16 +1,12 @@
 package com.roya.the_new_social_network.projects.services;
 
-import com.roya.the_new_social_network.global.access_management.projects.ProjectRole;
-import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectDao;
-import com.roya.the_new_social_network.projects.ProjectEntity;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 import com.roya.the_new_social_network.projects.members.ProjectMemberDao;
+import com.roya.the_new_social_network.projects.members.ProjectRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 @Service

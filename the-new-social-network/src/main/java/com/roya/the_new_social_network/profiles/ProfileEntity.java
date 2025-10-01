@@ -2,7 +2,7 @@ package com.roya.the_new_social_network.profiles;
 
 import com.roya.the_new_social_network.apprenticeship.Apprentice;
 import com.roya.the_new_social_network.apprenticeship.Mentor;
-import com.roya.the_new_social_network.forum.posts.Post;
+import com.roya.the_new_social_network.forum.posts.entities.Post;
 import com.roya.the_new_social_network.profiles.preferences.Preference;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 import com.roya.the_new_social_network.projects.applications.Application;

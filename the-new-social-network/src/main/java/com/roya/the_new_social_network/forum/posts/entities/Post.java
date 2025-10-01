@@ -1,9 +1,10 @@
-package com.roya.the_new_social_network.forum.posts;
+package com.roya.the_new_social_network.forum.posts.entities;
 
 import com.roya.the_new_social_network.forum.interactions.Comment;
 import com.roya.the_new_social_network.forum.interactions.Like;
 import com.roya.the_new_social_network.forum.interactions.Repost;
-import com.roya.the_new_social_network.forum.media.Media;
+import com.roya.the_new_social_network.forum.posts.enums.PostVisibility;
+import com.roya.the_new_social_network.global.PreferenceCategory;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
 import jakarta.persistence.*;
@@ -34,13 +35,8 @@ public class Post {
     @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
     private ProjectEntity project; // optional (only has a value in case of a project post)
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "post")
-    private List<Media> media; // optional
-
-    @Column(name = "body", nullable = false)
-    private String caption;
-
-    private String category; // optional
+    @Enumerated(EnumType.STRING)
+    private PreferenceCategory category; // optional
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "post")
     private List<Like> likes;

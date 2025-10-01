@@ -1,13 +1,9 @@
 package com.roya.the_new_social_network.projects;
 
-import com.roya.the_new_social_network.forum.posts.Post;
+import com.roya.the_new_social_network.forum.posts.entities.Post;
 import com.roya.the_new_social_network.global.PreferenceCategory;
-import com.roya.the_new_social_network.global.access_management.ComponentType;
-import com.roya.the_new_social_network.global.access_management.Permission;
-import com.roya.the_new_social_network.global.access_management.projects.ProjectAccessKey;
 import com.roya.the_new_social_network.projects.applications.Application;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
-import com.roya.the_new_social_network.projects.utils.ProjectUtils;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,6 +33,9 @@ public class ProjectEntity {
 
     private String creatorId;
 
+    @Enumerated(EnumType.STRING)
+    private ProjectJoiningStrategy projectJoiningVisibility; // open, application-based, invite-only (to be implemented later)
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
     @Builder.Default
     private List<ProjectMember> projectMembers = new ArrayList<>(); //project members, project admins, project watchers, project applicants
@@ -44,9 +43,6 @@ public class ProjectEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
     @Builder.Default
     private List<Application> applications = new ArrayList<>();
-
-    @OneToMany(mappedBy = "project")
-    private Set<ProjectAccessKey> accessKeys = generateProjectAccessKeySet();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -59,24 +55,6 @@ public class ProjectEntity {
     to generate project access-keys set (15 access-keys).
     to be called when the project is created.
    */
-    public Set<ProjectAccessKey> generateProjectAccessKeySet() {
-
-        Set<ProjectAccessKey> projectAccessKeys = new HashSet<>();
-
-        Map<Permission, ComponentType> map = ProjectUtils.populateProjectAccessMap();
-
-        for (Map.Entry<Permission, ComponentType> entry : map.entrySet()) {
-            ProjectAccessKey accessKey = ProjectAccessKey.builder()
-                    .project(this)
-                    .permission(entry.getKey())
-                    .componentType(entry.getValue())
-                    .build();
-
-            projectAccessKeys.add(accessKey);
-        }
-
-        return projectAccessKeys;
-    }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project")
     private List<Post> posts;
