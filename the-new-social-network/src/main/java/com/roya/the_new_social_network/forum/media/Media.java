@@ -1,6 +1,6 @@
 package com.roya.the_new_social_network.forum.media;
 
-import com.roya.the_new_social_network.forum.posts.Post;
+import com.roya.the_new_social_network.forum.posts.entities.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +28,8 @@ public class Media {
 
     private int fileSize;
 
-    private int length; // for audio and video
+    private String fileFormat;
+
+//    private int length; // for audio and video
 
 }

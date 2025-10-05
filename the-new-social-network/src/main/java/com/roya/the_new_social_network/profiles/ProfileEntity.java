@@ -2,7 +2,7 @@ package com.roya.the_new_social_network.profiles;
 
 import com.roya.the_new_social_network.apprenticeship.Apprentice;
 import com.roya.the_new_social_network.apprenticeship.Mentor;
-import com.roya.the_new_social_network.forum.posts.Post;
+import com.roya.the_new_social_network.forum.posts.entities.Post;
 import com.roya.the_new_social_network.profiles.preferences.Preference;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 import com.roya.the_new_social_network.projects.applications.Application;
@@ -38,6 +38,9 @@ public class ProfileEntity {
     @Column(name = "profile_url", unique = true) // e.g., www.roya.com/username
     private String profileUrl;
 
+//    @Column(name = "profile_visibility")
+//    private ProfileVisibility profileVisibility;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "author")
     private List<Post> posts;
 
@@ -59,6 +62,19 @@ public class ProfileEntity {
     private List<Application> applications = new ArrayList<>();
 
     private LocalDateTime createdAt;
+
     @Setter private LocalDateTime lastUpdatedAt;
+
+    public int getApprenticeCount() {
+        return apprentices != null ? apprentices.size() : 0;
+    }
+
+    public int getMentorCount() {
+        return mentors != null ? mentors.size() : 0;
+    }
+
+    public int getProjectMembershipCount() {
+        return projectMembers != null ? projectMembers.size() : 0;
+    }
 
 }

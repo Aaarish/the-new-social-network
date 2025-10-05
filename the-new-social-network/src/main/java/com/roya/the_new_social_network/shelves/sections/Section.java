@@ -1,5 +1,6 @@
 package com.roya.the_new_social_network.shelves.sections;
 
+import com.roya.the_new_social_network.forum.media.Media;
 import com.roya.the_new_social_network.shelves.Shelf;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,13 +19,14 @@ public class Section {
 
     @ManyToOne
     @JoinColumn(name = "shelf_id", referencedColumnName = "id", nullable = false)
-    private Shelf shelf;
+    @Setter private Shelf shelf;
 
     @Setter private String heading;
+
     @Setter private String content;
 
     @Builder.Default
-    @Setter private List<String> images = new ArrayList<>();
+    @Setter private List<String> media = new ArrayList<>();
 
     @Builder.Default
     @Setter private List<String> urls = new ArrayList<>();

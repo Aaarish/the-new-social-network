@@ -12,6 +12,7 @@ public class Note {
     private String id;
 
     @Setter private String title;
+
     @Setter private String content;
 
     @DocumentReference(lazy = true)

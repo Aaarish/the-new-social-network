@@ -1,6 +1,6 @@
 package com.roya.the_new_social_network.forum.interactions;
 
-import com.roya.the_new_social_network.forum.posts.Post;
+import com.roya.the_new_social_network.forum.posts.entities.Post;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,9 +31,9 @@ public class Repost {
     @Builder.Default
     private ShareType shareType = ShareType.REPOST;
 
-    @Column(name = "body", length = 1000)
-    @Setter
-    private String body;
+//    @Column(name = "body", length = 1000)
+//    @Setter
+//    private String body;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -50,9 +50,9 @@ public class Repost {
     public boolean isQuoteRepost() {
         return this.shareType.equals(ShareType.QUOTE);
     }
-
-    public boolean hasBody() {
-        return this.body != null && !this.body.trim().isEmpty();
-    }
+//
+//    public boolean hasBody() {
+//        return this.body != null && !this.body.trim().isEmpty();
+//    }
 
 }

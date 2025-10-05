@@ -23,10 +23,6 @@ public class Application {
     @JoinColumn(name = "profile_id", referencedColumnName = "id", nullable = false)
     private ProfileEntity profile;
 
-    @OneToOne
-    @JoinColumn(name = "applicant_id", referencedColumnName = "id", nullable = false)
-    private ProjectMember applicant;
-
     @Enumerated(EnumType.STRING)
     @Setter private ApplicationStatus status; // e.g., PENDING, APPROVED, REJECTED, EXPIRED
 
