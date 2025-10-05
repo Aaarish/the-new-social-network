@@ -1,7 +1,6 @@
 package com.roya.the_new_social_network.shelves.controllers;
 
 import com.roya.the_new_social_network.global.ComponentVisibility;
-import com.roya.the_new_social_network.global.resources.ResourceReference;
 import lombok.*;
 
 @Getter

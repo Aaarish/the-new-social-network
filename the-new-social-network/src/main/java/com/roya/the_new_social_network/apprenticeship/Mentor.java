@@ -21,11 +21,39 @@ public class Mentor {
     @JoinColumn(name = "profile_id", referencedColumnName = "id", nullable = false)
     private ProfileEntity profile;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "mentor", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "mentor", orphanRemoval = true)
     @Builder.Default
     private List<Apprentice> apprentices = new ArrayList<>();
 
     private LocalDateTime createdAt;
+
     @Setter private LocalDateTime lastUpdatedAt;
+
+    public void addApprentice(Apprentice apprentice) {
+        if (apprentices == null) {
+            apprentices = new ArrayList<>();
+        }
+        apprentices.add(apprentice);
+        apprentice.setMentor(this);
+    }
+
+    public void removeApprentice(Apprentice apprentice) {
+        if (apprentices != null) {
+            apprentices.remove(apprentice);
+            apprentice.setMentor(null);
+        }
+    }
+
+    public int getApprenticeCount() {
+        return apprentices != null ? apprentices.size() : 0;
+    }
+
+    public boolean hasApprentice(ProfileEntity profile) {
+        if (apprentices == null || profile == null) {
+            return false;
+        }
+        return apprentices.stream()
+                .anyMatch(a -> a.getProfile().getProfileId().equals(profile.getProfileId()));
+    }
 
 }

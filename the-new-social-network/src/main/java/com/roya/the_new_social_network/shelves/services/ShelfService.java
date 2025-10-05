@@ -1,17 +1,35 @@
 package com.roya.the_new_social_network.shelves.services;
 
+import com.roya.the_new_social_network.global.ComponentVisibility;
+import com.roya.the_new_social_network.shelves.Shelf;
+import com.roya.the_new_social_network.shelves.sections.Section;
 import com.roya.the_new_social_network.shelves.sections.SectionRequestDto;
 import com.roya.the_new_social_network.shelves.controllers.ShelfRequestDto;
 
+import java.util.List;
+
 public interface ShelfService {
-    String createShelfForProfile(String profileId, ShelfRequestDto shelfRequest);
 
-    String createShelfForProject(String projectId, ShelfRequestDto shelfRequest);
+    Shelf createShelf(String profileId, String projectId, String parentShelfId, String category, String banner, ComponentVisibility visibility);
 
-    String addSectionToShelf(String shelfId, SectionRequestDto sectionRequest);
+    Shelf getShelf(String shelfId);
 
-    String updateSectionInShelf(String shelfId, String sectionId, SectionRequestDto sectionRequest);
+    List<Shelf> getShelvesOfProfile(String profileId);
 
-    String removeSectionFromShelf(String shelfId, String sectionId);
+    List<Shelf> getShelvesOfProject(String projectId);
+
+    List<Shelf> getShelvesOfProjectMember(String profileId, String projectId);
+
+    Section addSectionToShelf(String shelfId, String heading, String content, String image, String url);
+
+    Section getSection(String sectionId);
+
+    List<Section> getSectionsOfShelf(String shelfId);
+
+    Section updateSectionInShelf(String shelfId, String sectionId, String heading, String content, String image, String url);
+
+    void removeSectionFromShelf(String shelfId, String sectionId);
+
+    void deleteShelf(String shelfId);
 
 }

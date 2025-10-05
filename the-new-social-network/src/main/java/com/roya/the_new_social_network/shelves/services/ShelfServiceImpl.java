@@ -1,16 +1,18 @@
 package com.roya.the_new_social_network.shelves.services;
 
-import com.roya.the_new_social_network.global.AppConstants;
+import com.roya.the_new_social_network.forum.media.Media;
+import com.roya.the_new_social_network.global.ComponentVisibility;
+import com.roya.the_new_social_network.global.utils.CommonUtils;
+import com.roya.the_new_social_network.profiles.ProfileEntity;
+import com.roya.the_new_social_network.projects.ProjectEntity;
 import com.roya.the_new_social_network.shelves.*;
-import com.roya.the_new_social_network.shelves.controllers.ShelfRequestDto;
 import com.roya.the_new_social_network.shelves.sections.Section;
 import com.roya.the_new_social_network.shelves.sections.SectionDao;
-import com.roya.the_new_social_network.shelves.sections.SectionRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,87 +20,108 @@ public class ShelfServiceImpl implements ShelfService {
     private final ShelfDao shelfDao;
     private final SectionDao sectionDao;
 
+    private final CommonUtils utils;
+
     @Override
-    public String createShelfForProject(String projectId, ShelfRequestDto shelfRequest) {
-        Shelf parentShelf = null;
-        if (shelfRequest.getParentShelfId() != null) {
-            Optional<Shelf> foundParent = shelfDao.findById(shelfRequest.getParentShelfId());
-            if (foundParent.isPresent()) parentShelf = foundParent.get();
-        }
+    public Shelf createShelf(String profileId, String projectId, String parentShelfId,
+                              String category, String banner, ComponentVisibility visibility) {
+
+        Shelf parentShelf = returnIfShelfExists(parentShelfId);
+
+        ProfileEntity profile = utils.returnProfileFromId(profileId);
+        ProjectEntity project = utils.returnProjectFromId(projectId);
 
         Shelf shelf = Shelf.builder()
-                .resourceTypeId(AppConstants.PROJECT_TYPE_ID)
-                .resourceId(projectId)
+                .manager(profile)
+                .project(project)
                 .parentShelf(parentShelf)
-                .visibility(shelfRequest.getVisibility())
-                .category(shelfRequest.getCategory())
-                .banner(shelfRequest.getBanner())
+                .banner(banner)
+                .category(category)
+                .visibility(visibility)
                 .build();
 
-        return shelf.getShelfId();
+        return shelfDao.save(shelf);
     }
 
     @Override
-    public String createShelfForProfile(String profileId, ShelfRequestDto shelfRequest) {
-        Shelf parentShelf = null;
-        if (shelfRequest.getParentShelfId() != null) {
-            Optional<Shelf> foundParent = shelfDao.findById(shelfRequest.getParentShelfId());
-            if (foundParent.isPresent()) parentShelf = foundParent.get();
-        }
-
-        Shelf shelf = Shelf.builder()
-                .resourceTypeId(AppConstants.PROFILE_TYPE_ID)
-                .resourceId(profileId)
-                .parentShelf(parentShelf)
-                .visibility(shelfRequest.getVisibility())
-                .category(shelfRequest.getCategory())
-                .banner(shelfRequest.getBanner())
-                .build();
-
-        return shelf.getShelfId();
+    public Shelf getShelf(String shelfId) {
+        return returnIfShelfExists(shelfId);
     }
 
     @Override
-    public String addSectionToShelf(String shelfId, SectionRequestDto sectionRequest) {
+    public List<Shelf> getShelvesOfProfile(String profileId) {
+        ProfileEntity manager = utils.returnProfileFromId(profileId);
+
+        return shelfDao.findByManager(manager);
+    }
+
+    @Override
+    public List<Shelf> getShelvesOfProject(String projectId) {
+        ProjectEntity project = utils.returnProjectFromId(projectId);
+
+        return shelfDao.findByProject(project);
+    }
+
+    @Override
+    public List<Shelf> getShelvesOfProjectMember(String profileId, String projectId) {
+        ProjectEntity project = utils.returnProjectFromId(projectId);
+        ProfileEntity profile = utils.returnProfileFromId(profileId);
+
+        return shelfDao.findByProjectAndManager(project, profile);
+    }
+
+    @Override
+    @Transactional
+    public Section addSectionToShelf(String shelfId, String heading, String content, String image, String url) {
         Shelf shelf = returnIfShelfExists(shelfId);
 
-        Section.builder()
+        Section section = Section.builder()
                 .shelf(shelf)
-                .heading(sectionRequest.getHeading())
-                .content(sectionRequest.getContent())
+                .heading(heading)
+                .content(content)
+                .media(List.of(image))
+                .urls(List.of(url))
                 .build();
 
+        Section savedSection = sectionDao.save(section);
+        shelf.getSections().add(savedSection);
+        return savedSection;
+    }
+
+    @Override
+    public Section getSection(String sectionId) {
+        return returnIfSectionExists(sectionId);
+    }
+
+    @Override
+    public List<Section> getSectionsOfShelf(String shelfId) {
+        Shelf shelf = returnIfShelfExists(shelfId);
+
+        return shelf.getSections();
+    }
+
+    @Override
+    @Transactional
+    public Section updateSectionInShelf(String shelfId, String sectionId,
+                                        String heading, String content, String image, String url) {
         return null;
     }
 
     @Override
     @Transactional
-    public String updateSectionInShelf(String shelfId, String sectionId, SectionRequestDto sectionRequest) {
-        Section section = returnIfSectionExists(sectionId);
+    public void removeSectionFromShelf(String shelfId, String sectionId) {
+        Shelf shelf = returnIfShelfExists(shelfId);
+        Section section = returnIfNoteExistsInDrawer(sectionId, shelf);
 
-        if (!section.getShelf().getShelfId().equals(shelfId)) return "Invalid Request: section does not belong to the specified shelf";
-
-        if (sectionRequest.getHeading() != null && !sectionRequest.getHeading().trim().isEmpty()) section.setHeading(sectionRequest.getHeading());
-        if (sectionRequest.getContent() != null && !sectionRequest.getHeading().trim().isEmpty()) section.setContent(sectionRequest.getContent());
-        if (sectionRequest.getImage() != null) section.getImages().add(sectionRequest.getImage());
-        if (sectionRequest.getUrl() != null) section.getUrls().add(sectionRequest.getUrl());
-
-        return sectionId;
+        shelf.getSections().remove(section);
+        sectionDao.delete(section);
     }
 
     @Override
     @Transactional
-    public String removeSectionFromShelf(String shelfId, String sectionId) {
-        Section section = returnIfSectionExists(sectionId);
-
-        Shelf shelf = section.getShelf();
-
-        if (!shelf.getShelfId().equals(shelfId)) return "Invalid Request: section does not belong to the specified shelf";
-
-        shelf.getSections().remove(section);
-        sectionDao.delete(section);
-
-        return sectionId;
+    public void deleteShelf(String shelfId) {
+        Shelf shelf = returnIfShelfExists(shelfId);
+        shelfDao.delete(shelf);
     }
 
     private Shelf returnIfShelfExists(String shelfId) {
@@ -109,5 +132,14 @@ public class ShelfServiceImpl implements ShelfService {
     private Section returnIfSectionExists(String sectionId) {
         return sectionDao.findById(sectionId)
                 .orElseThrow(() -> new IllegalArgumentException("Section not found"));
+    }
+
+    private Section returnIfNoteExistsInDrawer(String sectionId, Shelf shelf) {
+        Section section = returnIfSectionExists(sectionId);
+
+        return shelf.getSections().stream()
+                .filter(s -> s == section)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Note does not exist in this drawer"));
     }
 }

@@ -16,7 +16,7 @@ public class ProjectMember {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
-    private String memberId;
+    private String projectMemberId;
 
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
@@ -27,9 +27,8 @@ public class ProjectMember {
     private ProfileEntity profile;
 
     @Setter private ProjectRole role; // e.g., "creator", "applicant", "member", "admin", "watcher"
-    @Setter private String designation; // e.g., "developer", "designer", "manager"
 
-//    private ProjectMembershipStatus status; // e.g., "active", "pending", "removed"
+    @Setter private String designation; // e.g., "developer", "designer", "manager"
 
     @CreationTimestamp
     private LocalDateTime createdAt;

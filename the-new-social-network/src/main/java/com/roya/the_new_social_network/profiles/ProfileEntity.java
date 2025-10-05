@@ -38,6 +38,9 @@ public class ProfileEntity {
     @Column(name = "profile_url", unique = true) // e.g., www.roya.com/username
     private String profileUrl;
 
+//    @Column(name = "profile_visibility")
+//    private ProfileVisibility profileVisibility;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "author")
     private List<Post> posts;
 
@@ -59,6 +62,19 @@ public class ProfileEntity {
     private List<Application> applications = new ArrayList<>();
 
     private LocalDateTime createdAt;
+
     @Setter private LocalDateTime lastUpdatedAt;
+
+    public int getApprenticeCount() {
+        return apprentices != null ? apprentices.size() : 0;
+    }
+
+    public int getMentorCount() {
+        return mentors != null ? mentors.size() : 0;
+    }
+
+    public int getProjectMembershipCount() {
+        return projectMembers != null ? projectMembers.size() : 0;
+    }
 
 }

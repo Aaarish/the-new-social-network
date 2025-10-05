@@ -21,9 +21,10 @@ public class Apprentice {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mentor_id", referencedColumnName = "id", nullable = false)
-    private Mentor mentor;
+    @Setter private Mentor mentor;
 
     private LocalDateTime createdAt;
+
     @Setter private LocalDateTime lastUpdatedAt;
 
 }

@@ -1,12 +1,15 @@
 package com.roya.the_new_social_network.drawers.services;
 
-import com.roya.the_new_social_network.global.resources.ResourceReference;
+import com.roya.the_new_social_network.global.ComponentVisibility;
 import com.roya.the_new_social_network.drawers.Drawer;
 import com.roya.the_new_social_network.drawers.DrawerDao;
 import com.roya.the_new_social_network.drawers.Note;
 import com.roya.the_new_social_network.drawers.NoteDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -16,44 +19,67 @@ public class DrawerServiceImpl implements DrawerService {
     private final NoteDao noteDao;
 
     @Override
-    public String createDrawer(ResourceReference resource, String shelfId) {
+    public Drawer createDrawer(String profileId, String projectId, String shelfId, ComponentVisibility visibility) {
         Drawer drawer = Drawer.builder()
-                .resourceTypeId(resource.getResourceTypeId())
-                .resourceId(resource.getResourceId())
+                .projectId(projectId)
+                .profileId(profileId)
                 .shelfId(shelfId)
+                .visibility(visibility)
                 .build();
 
-        Drawer savedDrawer = drawerDao.save(drawer);
-
-        return savedDrawer.getId();
+        return drawerDao.save(drawer);
     }
 
     @Override
-    public String addNoteToDrawer(String drawerId, String title, String content) {
+    public Drawer getDrawer(String drawerId) {
+        return returnIfDrawerExists(drawerId);
+    }
+
+    @Override
+    public List<Drawer> getDrawersOfProject(String projectId) {
+        return drawerDao.findByProjectId(projectId);
+    }
+
+    @Override
+    public List<Drawer> getDrawersOfProfile(String profileId) {
+        return drawerDao.findByProfileId(profileId);
+    }
+
+    @Override
+    public List<Drawer> getDrawersOfProjectMember(String profileId, String projectId) {
+        return drawerDao.findByProjectIdAndProfileId(projectId, profileId);
+    }
+
+    @Override
+    @Transactional
+    public Drawer linkShelfToDrawer(String drawerId, String shelfId) {
+        Drawer drawer = returnIfDrawerExists(drawerId);
+
+        drawer.setShelfId(shelfId);
+        return drawerDao.save(drawer);
+    }
+
+    @Override
+    @Transactional
+    public Note addNoteToDrawer(String drawerId, String title, String content) {
         Drawer drawer = returnIfDrawerExists(drawerId);
 
         Note note = Note.builder()
-                .drawer(drawer)
                 .title(title)
                 .content(content)
+                .drawer(drawer)
                 .build();
 
         Note savedNote = noteDao.save(note);
+        drawer.getNotes().add(savedNote);
 
-        drawer.getNotes().add(note);
-        drawerDao.save(drawer);
-
-        return savedNote.getId();
+        return savedNote;
     }
 
     @Override
-    public String updateNoteInDrawer(String drawerId, String noteId, String content) {
-        Drawer drawer = returnIfDrawerExists(drawerId);
-        Note note = returnIfNoteExistsInDrawer(noteId, drawer);
-        note.setContent(content);
-        Note savedNote = noteDao.save(note);
-
-        return savedNote.getId();
+    @Transactional
+    public Note updateNoteInDrawer(String drawerId, String noteId, String content) {
+        return null;
     }
 
     @Override
@@ -61,15 +87,8 @@ public class DrawerServiceImpl implements DrawerService {
         Drawer drawer = returnIfDrawerExists(drawerId);
         Note note = returnIfNoteExistsInDrawer(noteId, drawer);
 
-        Note found = drawer.getNotes().stream()
-                .filter(n -> n.equals(note))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Note does not exist in this drawer"));
-
-        drawer.getNotes().remove(found);
-        drawerDao.save(drawer);
-
-        noteDao.delete(found);
+        drawer.getNotes().remove(note);
+        noteDao.delete(note);
     }
 
     @Override
@@ -77,6 +96,7 @@ public class DrawerServiceImpl implements DrawerService {
         Drawer drawer = returnIfDrawerExists(drawerId);
         drawerDao.delete(drawer);
     }
+
 
     private Drawer returnIfDrawerExists(String drawerId) {
         return drawerDao.findById(Long.parseLong(drawerId))
@@ -88,11 +108,13 @@ public class DrawerServiceImpl implements DrawerService {
                 .orElseThrow(() -> new IllegalArgumentException("Note not found"));
     }
 
+
+    // similar method to be implemented in ShelfServiceImpl (to check if a section belongs to a shelf)
     private Note returnIfNoteExistsInDrawer(String noteId, Drawer drawer) {
         Note note = returnIfNoteExists(noteId);
 
         return drawer.getNotes().stream()
-                .filter(n -> n.equals(note))
+                .filter(n -> n == note)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Note does not exist in this drawer"));
     }

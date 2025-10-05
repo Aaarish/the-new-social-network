@@ -1,4 +1,4 @@
-package com.roya.the_new_social_network.projects.services;
+package com.roya.the_new_social_network.projects.services.impl;
 
 import com.roya.the_new_social_network.profiles.ProfileDao;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
@@ -11,6 +11,7 @@ import com.roya.the_new_social_network.projects.applications.ApplicationStatus;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 import com.roya.the_new_social_network.projects.members.ProjectMemberDao;
 import com.roya.the_new_social_network.projects.members.ProjectRole;
+import com.roya.the_new_social_network.projects.services.ProjectJoiningService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +42,8 @@ public class ProjectJoiningServiceImpl implements ProjectJoiningService {
                     .role(ProjectRole.MEMBER)
                     .build();
 
-            project.getProjectMembers().add(newMember);
-            projectMemberDao.save(newMember);
+            ProjectMember savedMember = projectMemberDao.save(newMember);
+            project.getProjectMembers().add(savedMember);
             return true;
         } else if (project.getProjectJoiningVisibility().equals(ProjectJoiningStrategy.APPLICATION)) {
             Application application = Application.builder()
@@ -50,8 +51,10 @@ public class ProjectJoiningServiceImpl implements ProjectJoiningService {
                     .status(ApplicationStatus.PENDING)
                     .build();
 
-            project.getApplications().add(application);
-            applicationDao.save(application);
+            Application savedApplication = applicationDao.save(application);
+
+            project.getApplications().add(savedApplication);
+            profile.getApplications().add(savedApplication);
             return true;
         }
 
