@@ -1,11 +1,10 @@
 package com.roya.the_new_social_network.shelves;
 
-import com.roya.the_new_social_network.global.ComponentVisibility;
+import com.roya.the_new_social_network.global.enums.ComponentVisibility;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
-import com.roya.the_new_social_network.projects.members.ProjectMember;
+import com.roya.the_new_social_network.shelves.api.dto.response.ShelfResponse;
 import com.roya.the_new_social_network.shelves.sections.Section;
-import io.vavr.control.Either;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,5 +52,20 @@ public class Shelf {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parentShelf", orphanRemoval = true)
     @Builder.Default
     private List<Shelf> subShelves = new ArrayList<>();
+
+    public ShelfResponse toShelfResponse() {
+        return ShelfResponse.builder()
+                .shelfId(this.getShelfId())
+                .projectId(this.getProject() != null ? this.getProject().getProjectId() : null)
+                .managerId(this.getManager() != null ? this.getManager().getProfileId() : null)
+                .category(this.getCategory())
+                .banner(this.getBanner())
+                .visibility(this.getVisibility())
+                .sectionCount(this.getSections() != null ? this.getSections().size() : 0)
+                .subShelfCount(this.getSubShelves() != null ? this.getSubShelves().size() : 0)
+                .parentShelfId(this.getParentShelf() != null ? this.getParentShelf().getShelfId() : null)
+                .isPersonal(this.getProject() == null)
+                .build();
+    }
 
 }

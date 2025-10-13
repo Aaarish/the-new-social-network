@@ -1,8 +1,11 @@
 package com.roya.the_new_social_network.projects.services.impl;
 
+import com.roya.the_new_social_network.global.utils.CommonUtils;
+import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectDao;
 import com.roya.the_new_social_network.projects.ProjectEntity;
-import com.roya.the_new_social_network.projects.controllers.ProjectRequestDto;
+import com.roya.the_new_social_network.projects.api.dto.request.ProjectRequest;
+import com.roya.the_new_social_network.projects.api.dto.response.ProjectResponse;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 import com.roya.the_new_social_network.projects.members.ProjectRole;
 import com.roya.the_new_social_network.projects.services.ProjectService;
@@ -10,13 +13,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectDao projectDao;
 
+    private final CommonUtils utils;
+
     @Override
-    public ProjectEntity createProject(ProjectRequestDto requestDto) {
+    public ProjectEntity createProject(ProjectRequest requestDto) {
         ProjectEntity project = requestDto.toEntity();
 
         ProjectMember projectMember = ProjectMember.builder()
@@ -30,7 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public void updateProject(String profileId, String projectId, ProjectRequestDto requestDto) {
+    public ProjectEntity updateProject(String profileId, String projectId, ProjectRequest requestDto) {
         ValidRequestResponse valid = validateRequest(profileId, projectId);
 
         if (valid.isAuthorized)
@@ -41,11 +48,28 @@ public class ProjectServiceImpl implements ProjectService {
         if (requestDto.getTitle() != null) project.setTitle(requestDto.getTitle());
         if (requestDto.getCategory() != null) project.setCategory(requestDto.getCategory());
         if (requestDto.getDescription() != null) project.setDescription(requestDto.getDescription());
+
+        return projectDao.save(project);
     }
 
     @Override
     public ProjectEntity getProject(String projectId) {
         return returnIfProjectExists(projectId);
+    }
+
+    @Override
+    public List<ProjectResponse> getAllProjectsForProfile(String profileId) {
+        ProfileEntity profile = utils.returnProfileFromId(profileId);
+
+        return profile.getProjectMembers().stream()
+                .map(membership -> membership.getProject().toResponse())
+                .toList();
+    }
+
+    @Override
+    public List<ProjectMember> getProjectMembers(String projectId) {
+        ProjectEntity project = returnIfProjectExists(projectId);
+        return project.getProjectMembers();
     }
 
     @Override

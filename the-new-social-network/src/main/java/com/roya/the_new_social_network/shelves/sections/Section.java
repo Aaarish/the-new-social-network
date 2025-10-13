@@ -2,6 +2,7 @@ package com.roya.the_new_social_network.shelves.sections;
 
 import com.roya.the_new_social_network.forum.media.Media;
 import com.roya.the_new_social_network.shelves.Shelf;
+import com.roya.the_new_social_network.shelves.api.dto.response.SectionResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,5 +31,18 @@ public class Section {
 
     @Builder.Default
     @Setter private List<String> urls = new ArrayList<>();
+
+    public SectionResponse toSectionResponse() {
+        return SectionResponse.builder()
+                .sectionId(this.getSectionId())
+                .shelfId(this.getShelf() != null ? this.getShelf().getShelfId() : null)
+                .heading(this.getHeading())
+                .content(this.getContent())
+                .media(this.getMedia())
+                .urls(this.getUrls())
+                .mediaCount(this.getMedia() != null ? this.getMedia().size() : 0)
+                .urlCount(this.getUrls() != null ? this.getUrls().size() : 0)
+                .build();
+    }
 
 }

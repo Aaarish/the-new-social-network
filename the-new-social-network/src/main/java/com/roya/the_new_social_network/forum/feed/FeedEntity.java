@@ -7,12 +7,9 @@ import com.roya.the_new_social_network.profiles.preferences.Preference;
 import java.util.List;
 
 public class FeedEntity {
-    private ProfileEntity profile;
-
-    private String feedId = profile.getProfileId();
-
-    private List<Preference> preferences;
-
     private List<Post> posts;
 
+    public FeedEntity(List<Post> posts) {
+        this.posts = posts;
+    }
 }

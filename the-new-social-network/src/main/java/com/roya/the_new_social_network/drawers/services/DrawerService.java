@@ -1,8 +1,8 @@
 package com.roya.the_new_social_network.drawers.services;
 
-import com.roya.the_new_social_network.drawers.Drawer;
-import com.roya.the_new_social_network.drawers.Note;
-import com.roya.the_new_social_network.global.ComponentVisibility;
+import com.roya.the_new_social_network.drawers.entities.Drawer;
+import com.roya.the_new_social_network.drawers.entities.Note;
+import com.roya.the_new_social_network.global.enums.ComponentVisibility;
 
 import java.util.List;
 
