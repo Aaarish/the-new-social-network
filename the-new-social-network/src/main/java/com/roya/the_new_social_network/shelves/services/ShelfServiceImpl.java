@@ -1,7 +1,6 @@
 package com.roya.the_new_social_network.shelves.services;
 
-import com.roya.the_new_social_network.forum.media.Media;
-import com.roya.the_new_social_network.global.ComponentVisibility;
+import com.roya.the_new_social_network.global.enums.ComponentVisibility;
 import com.roya.the_new_social_network.global.utils.CommonUtils;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
@@ -122,6 +121,12 @@ public class ShelfServiceImpl implements ShelfService {
     public void deleteShelf(String shelfId) {
         Shelf shelf = returnIfShelfExists(shelfId);
         shelfDao.delete(shelf);
+    }
+
+    @Override
+    public List<Shelf> getSubShelves(String shelfId) {
+        Shelf shelf = returnIfShelfExists(shelfId);
+        return shelf.getSubShelves();
     }
 
     private Shelf returnIfShelfExists(String shelfId) {

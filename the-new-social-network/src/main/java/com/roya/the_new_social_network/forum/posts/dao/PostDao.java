@@ -1,7 +1,7 @@
 package com.roya.the_new_social_network.forum.posts.dao;
 
 import com.roya.the_new_social_network.forum.posts.entities.Post;
-import com.roya.the_new_social_network.global.PreferenceCategory;
+import com.roya.the_new_social_network.global.enums.PreferenceCategory;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface PostDao extends JpaRepository<Post, String> {
+public interface PostDao extends JpaRepository<Post, String>, PostDaoCustom {
 
     List<Post> findByCategory(PreferenceCategory category);
 
@@ -30,4 +30,8 @@ public interface PostDao extends JpaRepository<Post, String> {
 
     @Query("select * from posts where category in (?1) limit 10")
     List<Post> getPreferredPostsForFeed(Set<PreferenceCategory> preferences);
+
+//    List<Post> findByCategory(PreferenceCategory category);
+
+    List<Post> findFeedPostsForProfile(String profileId, int i, int i1, int i2, int i3);
 }

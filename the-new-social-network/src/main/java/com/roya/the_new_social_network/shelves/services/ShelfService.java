@@ -1,10 +1,8 @@
 package com.roya.the_new_social_network.shelves.services;
 
-import com.roya.the_new_social_network.global.ComponentVisibility;
+import com.roya.the_new_social_network.global.enums.ComponentVisibility;
 import com.roya.the_new_social_network.shelves.Shelf;
 import com.roya.the_new_social_network.shelves.sections.Section;
-import com.roya.the_new_social_network.shelves.sections.SectionRequestDto;
-import com.roya.the_new_social_network.shelves.controllers.ShelfRequestDto;
 
 import java.util.List;
 
@@ -32,4 +30,5 @@ public interface ShelfService {
 
     void deleteShelf(String shelfId);
 
+    List<Shelf> getSubShelves(String shelfId);
 }

@@ -2,6 +2,7 @@ package com.roya.the_new_social_network.projects.members;
 
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
+import com.roya.the_new_social_network.projects.api.dto.response.ProjectMemberResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,6 +37,17 @@ public class ProjectMember {
     @UpdateTimestamp
     @Setter
     private LocalDateTime lastUpdatedAt;
+
+    public ProjectMemberResponse toProjectMemberResponse() {
+        return ProjectMemberResponse.builder()
+                .memberId(this.projectMemberId)
+                .profileId(this.profile.getProfileId())
+                .projectId(this.project.getProjectId())
+                .role(this.role.name())
+                .designation(this.designation)
+                .joinedAt(this.createdAt)
+                .build();
+    }
 
     public ProfileEntity mapToProfile(ProjectMember projectMember) {
         return projectMember.getProfile();

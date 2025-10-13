@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +52,27 @@ public class ProjectWatchServiceImpl implements ProjectWatchService {
                     project.getProjectMembers().remove(watcher);
                     projectMemberDao.delete(watcher);
                 });
+    }
+
+    @Override
+    public boolean isWatching(String profileId, String projectId) {
+
+        return false;
+    }
+
+    @Override
+    public List<ProjectEntity> getWatchedProjects(String profileId) {
+        return null;
+    }
+
+    @Override
+    public List<ProfileEntity> getWatchers(String projectId) {
+        return null;
+    }
+
+    @Override
+    public int getWatcherCount(String projectId) {
+        return 0;
     }
 
     private ProjectEntity returnProjectFromId(String projectId) {

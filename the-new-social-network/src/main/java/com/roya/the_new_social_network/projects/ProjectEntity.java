@@ -1,8 +1,9 @@
 package com.roya.the_new_social_network.projects;
 
-import com.roya.the_new_social_network.drawers.Drawer;
+import com.roya.the_new_social_network.drawers.entities.Drawer;
 import com.roya.the_new_social_network.forum.posts.entities.Post;
-import com.roya.the_new_social_network.global.PreferenceCategory;
+import com.roya.the_new_social_network.global.enums.PreferenceCategory;
+import com.roya.the_new_social_network.projects.api.dto.response.ProjectResponse;
 import com.roya.the_new_social_network.projects.applications.Application;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 import com.roya.the_new_social_network.projects.members.ProjectRole;
@@ -73,6 +74,22 @@ public class ProjectEntity {
                 .findFirst()
                 .map(member -> member.getProfile().getProfileId())
                 .orElse(null);
+    }
+
+    public ProjectResponse toResponse() {
+        return ProjectResponse.builder()
+                .projectId(this.getProjectId())
+                .title(this.getTitle())
+                .description(this.getDescription())
+                .category(this.getCategory())
+                .projectUrl(this.getProjectUrl())
+                .creatorId(this.getCreatorId())
+                .projectJoiningStrategy(this.getProjectJoiningVisibility())
+                .memberCount(this.getProjectMembers() != null ? this.getProjectMembers().size() : 0)
+                .applicationCount(this.getApplications() != null ? this.getApplications().size() : 0)
+                .createdAt(this.getCreatedAt())
+                .lastUpdatedAt(this.getLastUpdatedAt())
+                .build();
     }
 
 

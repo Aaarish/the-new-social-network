@@ -1,6 +1,6 @@
 package com.roya.the_new_social_network.profiles.preferences;
 
-import com.roya.the_new_social_network.global.PreferenceCategory;
+import com.roya.the_new_social_network.global.enums.PreferenceCategory;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,17 +16,19 @@ public class Preference {
 
     @Id
     @Column(name = "id", unique = true, nullable = false, updatable = false)
-    private Integer prefId = generatePreferenceId();
+    private String prefId = generatePreferenceId();
 
-    private Integer generatePreferenceId() {
-        return this.category.getPrefId();
+    private String generatePreferenceId() {
+        return this.category.getPrefId() + "__" + this.getProfile().getProfileId();
     }
 
     @Enumerated(EnumType.STRING)
     private PreferenceCategory category;
 
-    private Integer interestLevel; // 0 to 10
-    private String description;
+    @Builder.Default
+    @Setter private Integer interestLevel = 5; // 0 to 10
+
+    @Setter private String description;
 
     @ManyToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id", nullable = false)

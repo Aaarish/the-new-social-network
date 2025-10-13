@@ -4,7 +4,7 @@ import com.roya.the_new_social_network.forum.interactions.Comment;
 import com.roya.the_new_social_network.forum.interactions.Like;
 import com.roya.the_new_social_network.forum.interactions.Repost;
 import com.roya.the_new_social_network.forum.posts.enums.PostVisibility;
-import com.roya.the_new_social_network.global.PreferenceCategory;
+import com.roya.the_new_social_network.global.enums.PreferenceCategory;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
 import jakarta.persistence.*;
