@@ -11,7 +11,7 @@ public class AuthDto {
 
     @Data
     @Builder
-    public class RegisterRequest {
+    public static class RegisterRequest {
 
         @NotBlank(message = "Username is required")
         @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
@@ -37,7 +37,7 @@ public class AuthDto {
 
     @Data
     @Builder
-    public class LoginRequest {
+    public static class LoginRequest {
 
         @NotBlank(message = "Username is required")
         private String username;
@@ -49,7 +49,7 @@ public class AuthDto {
 
     @Data
     @Builder
-    public class AuthResponse {
+    public static class AuthResponse {
         private ProfileResponse profileResponse;
         private String token;
         private String expiresIn;

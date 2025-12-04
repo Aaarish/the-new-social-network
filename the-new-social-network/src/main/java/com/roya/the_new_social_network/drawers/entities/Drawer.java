@@ -28,6 +28,7 @@ public class Drawer {
     @Builder.Default
     private ComponentVisibility visibility = ComponentVisibility.PUBLIC;
 
+    // needs to add mapping to notes
     @DocumentReference(lazy = true)
     @Builder.Default
     private List<Note> notes = new ArrayList<>();

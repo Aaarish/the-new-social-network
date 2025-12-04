@@ -42,7 +42,12 @@ public class ProjectEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "project_joining_visibility", nullable = false)
     @Builder.Default
-    private ProjectJoiningStrategy projectJoiningVisibility = ProjectJoiningStrategy.OPEN; // open, application, invite-only (to be implemented later)
+    @Setter private ProjectJoiningStrategy projectJoiningVisibility = ProjectJoiningStrategy.OPEN; // open, application, invite-only (to be implemented later)
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    @Setter private ProjectStatus status = ProjectStatus.ACTIVE;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
     @Builder.Default

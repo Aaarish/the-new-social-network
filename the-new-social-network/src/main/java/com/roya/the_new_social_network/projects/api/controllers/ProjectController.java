@@ -1,7 +1,8 @@
 package com.roya.the_new_social_network.projects.api.controllers;
 
-import com.roya.the_new_social_network.global.utils.CommonUtils;
+import com.roya.the_new_social_network.global.utils.CommonDaoUtils;
 import com.roya.the_new_social_network.projects.ProjectEntity;
+import com.roya.the_new_social_network.projects.api.dto.request.ProjectUpdateRequest;
 import com.roya.the_new_social_network.projects.api.dto.response.ProjectDeleteResponse;
 import com.roya.the_new_social_network.projects.api.dto.request.ProjectRequest;
 import com.roya.the_new_social_network.projects.api.dto.response.ProjectMemberResponse;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectController {
     private final ProjectService projectService;
-    private final CommonUtils utils;
+    private final CommonDaoUtils utils;
 
     @PostMapping
     public ResponseEntity<ProjectResponse> createProject(@RequestBody @Valid ProjectRequest requestDto) {
@@ -40,7 +41,7 @@ public class ProjectController {
     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectResponse> updateProject(@PathVariable @NotBlank String projectId,
                                                          @RequestParam @NotBlank String profileId,
-                                                         @RequestBody @Valid ProjectRequest requestDto) {
+                                                         @RequestBody @Valid ProjectUpdateRequest requestDto) {
         ProjectEntity project = projectService.updateProject(profileId, projectId, requestDto);
         return ResponseEntity.ok(project.toResponse());
     }

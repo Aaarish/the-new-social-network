@@ -1,5 +1,7 @@
 package com.roya.the_new_social_network.global.utils;
 
+import com.roya.the_new_social_network.forum.posts.dao.PostDao;
+import com.roya.the_new_social_network.forum.posts.entities.Post;
 import com.roya.the_new_social_network.profiles.ProfileDao;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectDao;
@@ -11,14 +13,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CommonUtils {
+public class CommonDaoUtils {
     private final ProjectDao projectDao;
     private final ProfileDao profileDao;
     private final ProjectMemberDao projectMemberDao;
+    private final PostDao postDao;
 
 
     public ProfileEntity returnProfileFromId(String profileId) {
         return profileDao.findById(profileId)
+                .orElseThrow(() -> new IllegalArgumentException("Profile not found"));
+    }
+
+    public ProfileEntity returnProfileFromUsername(String username) {
+        return profileDao.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Profile not found"));
     }
 
@@ -36,6 +44,11 @@ public class CommonUtils {
         return projectMemberDao.findByProfileAndProject(this.returnProfileFromId(profileId),
                 this.returnProjectFromId(projectId))
                 .orElseThrow(() -> new IllegalArgumentException("Project member not found"));
+    }
+
+    public Post returnPostFromId(String postId) {
+        return postDao.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
     }
 
 }

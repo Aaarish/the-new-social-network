@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ErrorResponse {
-    private boolean isSuccess;
     private String message;
     private String errorCode;
     private LocalDateTime timestamp;

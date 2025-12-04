@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PreferenceResponse {
-    private Integer preferenceId;
+    private String preferenceId;
     private String profileId;
     private PreferenceCategory category;
     private Integer interestLevel;

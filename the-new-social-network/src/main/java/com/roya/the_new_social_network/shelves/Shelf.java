@@ -30,7 +30,7 @@ public class Shelf {
     private ProjectEntity project; // project = null means it's a personal shelf, else it belongs to a project
 
     @OneToOne
-    @Column(name = "manager_id", nullable = false)
+    @JoinColumn(name = "manager_id", nullable = false)
     private ProfileEntity manager; // project member if it belongs to a project, else profile
 
     private String category;

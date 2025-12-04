@@ -1,4 +1,4 @@
-package com.roya.the_new_social_network.forum.interactions;
+package com.roya.the_new_social_network.forum.interactions.likes;
 
 import com.roya.the_new_social_network.forum.posts.entities.Post;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "likes", uniqueConstraints = {
@@ -21,19 +22,26 @@ import java.time.LocalDateTime;
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private String likeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private ProfileEntity user;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public Like(Post post, ProfileEntity user) {
+        this.likeId = UUID.randomUUID().toString();
+        this.post = post;
+        this.user = user;
+        this.createdAt = LocalDateTime.now();
+    }
 
 }
