@@ -1,21 +1,14 @@
 package com.roya.the_new_social_network.forum.feed;
 
-import com.roya.the_new_social_network.apprenticeship.Mentor;
 import com.roya.the_new_social_network.apprenticeship.MentorDao;
 import com.roya.the_new_social_network.forum.posts.dao.PostDao;
 import com.roya.the_new_social_network.forum.posts.entities.Post;
-import com.roya.the_new_social_network.global.utils.CommonUtils;
-import com.roya.the_new_social_network.profiles.ProfileEntity;
-import com.roya.the_new_social_network.profiles.preferences.Preference;
+import com.roya.the_new_social_network.global.utils.CommonDaoUtils;
 import com.roya.the_new_social_network.projects.ProjectDao;
-import com.roya.the_new_social_network.projects.ProjectJoiningStrategy;
-import com.roya.the_new_social_network.projects.members.ProjectMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +16,7 @@ public class FeedServiceImpl implements FeedService {
     private final PostDao postDao;
     private final ProjectDao projectDao;
     private final MentorDao mentorDao;
-    private final CommonUtils utils;
+    private final CommonDaoUtils utils;
 
     @Override
     public FeedEntity loadFeed(String profileId) {

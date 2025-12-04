@@ -4,7 +4,7 @@ import com.roya.the_new_social_network.apprenticeship.Apprentice;
 import com.roya.the_new_social_network.apprenticeship.ApprenticeDao;
 import com.roya.the_new_social_network.apprenticeship.Mentor;
 import com.roya.the_new_social_network.apprenticeship.MentorDao;
-import com.roya.the_new_social_network.global.utils.CommonUtils;
+import com.roya.the_new_social_network.global.utils.CommonDaoUtils;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ApprenticeshipServiceImpl implements ApprenticeshipService {
     private final ApprenticeDao apprenticeDao;
     private final MentorDao mentorDao;
-    private final CommonUtils utils;
+    private final CommonDaoUtils utils;
 
     @Override
     @Transactional

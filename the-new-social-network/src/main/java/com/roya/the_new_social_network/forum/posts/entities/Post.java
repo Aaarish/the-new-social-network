@@ -1,15 +1,15 @@
 package com.roya.the_new_social_network.forum.posts.entities;
 
-import com.roya.the_new_social_network.forum.interactions.Comment;
-import com.roya.the_new_social_network.forum.interactions.Like;
+import com.roya.the_new_social_network.forum.interactions.comments.Comment;
+import com.roya.the_new_social_network.forum.interactions.likes.Like;
 import com.roya.the_new_social_network.forum.interactions.Repost;
 import com.roya.the_new_social_network.forum.posts.enums.PostVisibility;
+import com.roya.the_new_social_network.forum.posts.enums.ProjectPostLabel;
 import com.roya.the_new_social_network.global.enums.PreferenceCategory;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,7 +20,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "posts")
-@Getter @NoArgsConstructor @AllArgsConstructor @Builder
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "post_type")
+@Getter
+@NoArgsConstructor @AllArgsConstructor
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,7 +41,9 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private PreferenceCategory category; // optional
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "post")
+    private ProjectPostLabel projectPostLabel;
+
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "post", orphanRemoval = true)
     private List<Like> likes;
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "post")
@@ -59,5 +64,15 @@ public class Post {
 
     @UpdateTimestamp
     private LocalDateTime lastUpdatedAt;
+
+    public void likePost(Like like) {
+        this.likes.add(like);
+        this.likeCounts++;
+    }
+
+    public void unlikePost(Like like) {
+        this.likes.remove(like);
+        this.likeCounts--;
+    }
 
 }

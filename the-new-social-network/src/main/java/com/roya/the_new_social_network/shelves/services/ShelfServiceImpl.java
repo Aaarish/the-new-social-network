@@ -1,7 +1,7 @@
 package com.roya.the_new_social_network.shelves.services;
 
 import com.roya.the_new_social_network.global.enums.ComponentVisibility;
-import com.roya.the_new_social_network.global.utils.CommonUtils;
+import com.roya.the_new_social_network.global.utils.CommonDaoUtils;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
 import com.roya.the_new_social_network.shelves.*;
@@ -19,7 +19,7 @@ public class ShelfServiceImpl implements ShelfService {
     private final ShelfDao shelfDao;
     private final SectionDao sectionDao;
 
-    private final CommonUtils utils;
+    private final CommonDaoUtils utils;
 
     @Override
     public Shelf createShelf(String profileId, String projectId, String parentShelfId,

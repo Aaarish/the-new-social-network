@@ -1,13 +1,19 @@
 package com.roya.the_new_social_network.forum.posts.entities;
 
 import com.roya.the_new_social_network.forum.media.Media;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@DiscriminatorValue("MEDIA")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MediaPost extends Post {
     @Column(name = "media_url", nullable = false)
     private String mediaUrl;

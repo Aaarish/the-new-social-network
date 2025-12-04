@@ -1,10 +1,11 @@
 package com.roya.the_new_social_network.projects.services.impl;
 
-import com.roya.the_new_social_network.global.utils.CommonUtils;
+import com.roya.the_new_social_network.global.utils.CommonDaoUtils;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectDao;
 import com.roya.the_new_social_network.projects.ProjectEntity;
 import com.roya.the_new_social_network.projects.api.dto.request.ProjectRequest;
+import com.roya.the_new_social_network.projects.api.dto.request.ProjectUpdateRequest;
 import com.roya.the_new_social_network.projects.api.dto.response.ProjectResponse;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 import com.roya.the_new_social_network.projects.members.ProjectRole;
@@ -20,7 +21,7 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectDao projectDao;
 
-    private final CommonUtils utils;
+    private final CommonDaoUtils utils;
 
     @Override
     public ProjectEntity createProject(ProjectRequest requestDto) {
@@ -37,8 +38,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectEntity updateProject(String profileId, String projectId, ProjectRequest requestDto) {
-        ValidRequestResponse valid = validateRequest(profileId, projectId);
+    public ProjectEntity updateProject(String profileId, String projectId, ProjectUpdateRequest requestDto) {
+        ValidRequestResponse valid = validateWriteRequest(profileId, projectId);
 
         if (valid.isAuthorized)
             throw new RuntimeException("Unauthorized to update this project");
@@ -48,6 +49,8 @@ public class ProjectServiceImpl implements ProjectService {
         if (requestDto.getTitle() != null) project.setTitle(requestDto.getTitle());
         if (requestDto.getCategory() != null) project.setCategory(requestDto.getCategory());
         if (requestDto.getDescription() != null) project.setDescription(requestDto.getDescription());
+        if (requestDto.getStatus() != null) project.setStatus(requestDto.getStatus());
+        if (requestDto.getProjectJoiningStrategy() != null) project.setProjectJoiningVisibility(requestDto.getProjectJoiningStrategy());
 
         return projectDao.save(project);
     }
@@ -74,7 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteProject(String profileId, String projectId) {
-        ValidRequestResponse valid = validateRequest(profileId, projectId);
+        ValidRequestResponse valid = validateWriteRequest(profileId, projectId);
 
         if (valid.isAuthorized)
             throw new RuntimeException("Unauthorized to update this project");
@@ -92,7 +95,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private record ValidRequestResponse (boolean isAuthorized, ProjectEntity project) {}
 
-    private ValidRequestResponse validateRequest(String profileId, String projectId) {
+    private ValidRequestResponse validateWriteRequest(String profileId, String projectId) {
         // check if then given profile has the authorization to make this request for the given project
         ProjectEntity project = returnIfProjectExists(projectId);
 

@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "media")
-@Getter @NoArgsConstructor @AllArgsConstructor @Builder
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "media_type")
+@Getter @NoArgsConstructor @AllArgsConstructor
 public class Media {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

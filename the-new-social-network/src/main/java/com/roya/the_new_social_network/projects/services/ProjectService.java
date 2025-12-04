@@ -2,6 +2,7 @@ package com.roya.the_new_social_network.projects.services;
 
 import com.roya.the_new_social_network.projects.ProjectEntity;
 import com.roya.the_new_social_network.projects.api.dto.request.ProjectRequest;
+import com.roya.the_new_social_network.projects.api.dto.request.ProjectUpdateRequest;
 import com.roya.the_new_social_network.projects.api.dto.response.ProjectResponse;
 import com.roya.the_new_social_network.projects.members.ProjectMember;
 
@@ -16,7 +17,7 @@ public interface ProjectService {
 
     List<ProjectMember> getProjectMembers(String projectId);
 
-    ProjectEntity updateProject(String profileId, String projectId, ProjectRequest requestDto);
+    ProjectEntity updateProject(String profileId, String projectId, ProjectUpdateRequest requestDto);
 
     void deleteProject(String profileId, String projectId);
 

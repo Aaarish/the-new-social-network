@@ -19,3 +19,6 @@ spring:
       port: 27017
       database: the_new_social_network_mongodb
 
+jwt:
+  secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret
+  expiration: 86400000 # 1 day in milliseconds
