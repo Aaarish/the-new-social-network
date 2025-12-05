@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @Entity
@@ -41,6 +39,10 @@ public class Comment {
     private LocalDateTime updatedAt;
 
     private int likeCount;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<CommentLike> commentLikes;
+
     private boolean isPinned;
 
     public Comment() {
@@ -53,16 +55,21 @@ public class Comment {
         this.post = post;
         this.createdAt = LocalDateTime.now();
         this.replies = new ArrayList<>();
+        this.commentLikes = new HashSet<>();
     }
 
     // basic methods
 
-    public void likeComment() {
-        this.likeCount++;
+    public void likeComment(CommentLike like) {
+        this.commentLikes.add(like);
+        this.likeCount = this.commentLikes.size();
     }
 
-    public void unlikeComment() {
-        if (likeCount > 0) this.likeCount--;
+    public void unlikeComment(CommentLike like) {
+        if (likeCount > 0) {
+            this.commentLikes.remove(like);
+            this.likeCount = this.commentLikes.size();
+        }
     }
 
     public int getCommentLikes() {

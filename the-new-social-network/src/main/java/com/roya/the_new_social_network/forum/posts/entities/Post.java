@@ -2,7 +2,7 @@ package com.roya.the_new_social_network.forum.posts.entities;
 
 import com.roya.the_new_social_network.forum.interactions.comments.Comment;
 import com.roya.the_new_social_network.forum.interactions.likes.Like;
-import com.roya.the_new_social_network.forum.interactions.Repost;
+import com.roya.the_new_social_network.forum.interactions.reposts.Repost;
 import com.roya.the_new_social_network.forum.posts.enums.PostVisibility;
 import com.roya.the_new_social_network.forum.posts.enums.ProjectPostLabel;
 import com.roya.the_new_social_network.global.enums.PreferenceCategory;

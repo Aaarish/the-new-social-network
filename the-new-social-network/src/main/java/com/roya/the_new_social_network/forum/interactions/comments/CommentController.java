@@ -77,6 +77,13 @@ public class CommentController {
         return ResponseEntity.ok().build();
     }
 
+//    @PostMapping("/comments/{commentId}/like")
+//    public ResponseEntity<Void> toggleLikeComment(@PathVariable String commentId,
+//                                                  @AuthenticationPrincipal UserDetails userDetails) {
+//        commentService.toggleLike(commentId, userDetails);
+//        return ResponseEntity.ok().build();
+//    }
+
     @PostMapping("/comments/{commentId}/pin")
     public ResponseEntity<Void> pinComment(@PathVariable String commentId,
                                            @AuthenticationPrincipal UserDetails userDetails) {

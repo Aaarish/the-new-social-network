@@ -25,6 +25,8 @@ public interface CommentService {
 
     void unlikeComment(String commentId, UserDetails userDetails);
 
+//    void toggleLikeForComment(String commentId, UserDetails userDetails);
+
     void pinComment(String commentId, UserDetails userDetails);
 
     void unpinComment(String commentId, UserDetails userDetails);
