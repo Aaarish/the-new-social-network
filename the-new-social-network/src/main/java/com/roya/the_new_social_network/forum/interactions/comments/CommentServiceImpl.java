@@ -110,7 +110,7 @@ public class CommentServiceImpl implements CommentService {
         comment.addReply(new Comment(content, user, comment.getPost()));
         Comment savedReply = commentDao.save(comment);
 
-        log.info("Reply {} added to comment {} by user {}", savedReply.getId(), commentId, userDetails.getUsername());
+        log.info("Reply {} added to comment {} by user {}", savedReply.getCommentId(), commentId, userDetails.getUsername());
         return CommentResponse.fromEntity(savedReply);
     }
 

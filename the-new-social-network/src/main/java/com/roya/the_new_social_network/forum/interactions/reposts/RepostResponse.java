@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RepostResponse {
-    private String id;
+    private String repostId;
     private String postId;
     private String userId;
     private String shareType;
@@ -20,7 +20,7 @@ public class RepostResponse {
         if (repost == null) return null;
 
         return RepostResponse.builder()
-                .id(repost.getId())
+                .repostId(repost.getRepostId())
                 .postId(repost.getPost().getPostId())
                 .userId(repost.getUser().getProfileId())
                 .shareType(repost.getShareType().toString())

@@ -1,25 +1,45 @@
 package com.roya.the_new_social_network.forum.posts.entities;
 
 import com.roya.the_new_social_network.forum.media.Media;
+import com.roya.the_new_social_network.forum.posts.enums.PostType;
+import com.roya.the_new_social_network.forum.posts.enums.PostVisibility;
+import com.roya.the_new_social_network.forum.posts.enums.ProjectPostLabel;
+import com.roya.the_new_social_network.profiles.ProfileEntity;
+import com.roya.the_new_social_network.projects.ProjectEntity;
 import jakarta.persistence.DiscriminatorValue;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 
 @DiscriminatorValue("BLOG")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class BlogPost extends Post {
     private String title;
     private String category;
-    private String body;
+    private String content;
     private int readTime;
     private List<Media> media;
 
+    public BlogPost(ProfileEntity author, String title, String category, String content, int readTime, List<Media> media) {
+        super(author, PostType.BLOG);
+        this.title = title;
+        this.category = category;
+        this.content = content;
+        this.readTime = readTime;
+        this.media = media;
+    }
+
+    public BlogPost(ProfileEntity author, ProjectEntity project, PostVisibility visibility, ProjectPostLabel postLabel,
+                    String title, String category, String content, int readTime, List<Media> media) {
+        super(author, PostType.BLOG, project, visibility, postLabel);
+        this.title = title;
+        this.category = category;
+        this.content = content;
+        this.readTime = readTime;
+        this.media = media;
+    }
+
+    public BlogPost(ProfileEntity author, String title, String category, String content, List<Media> media) {
+    }
 }

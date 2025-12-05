@@ -6,12 +6,15 @@ import com.roya.the_new_social_network.forum.posts.enums.PostVisibility;
 import com.roya.the_new_social_network.forum.posts.enums.ProjectPostLabel;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 
-@DiscriminatorValue("MEDIA")
+@DiscriminatorValue("PAMPHLET")
 @Getter
-public class MediaPost extends Post {
+public class PamphletPost extends Post {
     @Column(name = "media_url", nullable = false)
     private String mediaUrl;
 
@@ -21,16 +24,9 @@ public class MediaPost extends Post {
     @Column(name = "caption", nullable = false)
     private String caption;
 
-    public MediaPost(ProfileEntity author, String mediaUrl, Media media, String caption) {
-        super(author, PostType.MEDIA);
-        this.mediaUrl = mediaUrl;
-        this.media = media;
-        this.caption = caption;
-    }
-
-    public MediaPost(ProfileEntity author, ProjectEntity project, PostVisibility visibility, ProjectPostLabel postLabel,
-                     String mediaUrl, Media media, String caption) {
-        super(author, PostType.MEDIA, project, visibility, postLabel);
+    public PamphletPost(ProfileEntity author, ProjectEntity project, PostVisibility visibility, ProjectPostLabel postLabel,
+                        String mediaUrl, Media media, String caption) {
+        super(author, PostType.PAMPHLET, project, visibility, postLabel);
         this.mediaUrl = mediaUrl;
         this.media = media;
         this.caption = caption;

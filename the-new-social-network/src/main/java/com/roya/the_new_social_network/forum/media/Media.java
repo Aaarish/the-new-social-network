@@ -1,37 +1,61 @@
 package com.roya.the_new_social_network.forum.media;
 
 import com.roya.the_new_social_network.forum.posts.entities.Post;
+import com.roya.the_new_social_network.profiles.ProfileEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "media")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "media_type")
-@Getter @NoArgsConstructor @AllArgsConstructor
+@Getter
 public class Media {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", nullable = false)
     private String mediaId;
 
-    @ManyToOne
+    private String filename;
+    private int fileSizeInBytes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private ProfileEntity owner;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "media_type", nullable = false)
     private MediaType mediaType;
 
-    private String url;
+    private String mimeType;
+    private String pathUrl;
+    private String source;
+    private String visibility;
 
-    private int fileSize;
+    private LocalDateTime createdAt;
 
-    private String fileFormat;
+    public Media() {}
 
-//    private int length; // for audio and video
+    public Media(String name, int size, ProfileEntity owner, MediaType mediaType, String mimeType, String source, String visibility) {
+        this.mediaId = UUID.randomUUID().toString();
+        this.filename = name;
+        this.fileSizeInBytes = size;
+        this.owner = owner;
+        this.mediaType = mediaType;
+        this.mimeType = mimeType;
+        this.source = source;
+        this.visibility = visibility;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public void linkToPost(Post post) {
+        this.post = post;
+    }
+
+    public void setPathUrl(String pathUrl) {
+        this.pathUrl = pathUrl;
+    }
 
 }

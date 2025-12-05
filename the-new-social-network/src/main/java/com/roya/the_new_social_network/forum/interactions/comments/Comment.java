@@ -15,7 +15,7 @@ import java.util.*;
 public class Comment {
 
     @Id
-    private String id;
+    private String commentId;
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,7 +49,7 @@ public class Comment {
     }
 
     public Comment(String content, ProfileEntity user, Post post) {
-        this.id = UUID.randomUUID().toString();
+        this.commentId = UUID.randomUUID().toString();
         this.content = content;
         this.user = user;
         this.post = post;
@@ -129,7 +129,7 @@ public class Comment {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Comment comment)) return false;
-        return id != null && id.equals(comment.id);
+        return commentId != null && commentId.equals(comment.commentId);
     }
 
     @Override

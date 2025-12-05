@@ -6,10 +6,13 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
-@Table
+@Table(name = "comment_likes", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_user_comment_like",
+                columnNames = {"comment_id", "user_id"})
+})
 @Getter
 public class CommentLike {
     @Id
@@ -29,7 +32,7 @@ public class CommentLike {
     }
 
     public CommentLike(Comment comment, ProfileEntity user) {
-        this.commentLikeId = UUID.randomUUID().toString();
+        this.commentLikeId = comment.getCommentId() + "_" + user.getProfileId();
         this.comment = comment;
         this.user = user;
         this.createdAt = LocalDateTime.now();
