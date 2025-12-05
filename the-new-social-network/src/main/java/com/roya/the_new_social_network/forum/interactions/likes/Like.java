@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -38,10 +39,23 @@ public class Like {
     private LocalDateTime createdAt;
 
     public Like(Post post, ProfileEntity user) {
-        this.likeId = UUID.randomUUID().toString();
+        this.likeId = post.getPostId() + "_" + user.getProfileId();
         this.post = post;
         this.user = user;
         this.createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Like like)) return false;
+        return Objects.equals(user, like.user) &&
+                Objects.equals(post, like.post);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, post);
     }
 
 }

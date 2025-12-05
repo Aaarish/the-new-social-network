@@ -44,9 +44,9 @@ public class LikeServiceImpl implements LikeService {
     @Transactional
     public GlobalDeleteResponse unlikePost(String postId, String userId) {
         Post post = utils.returnPostFromId(postId);
-        ProfileEntity user = utils.returnProfileFromId(userId);
+        String likeId = postId + "_" + userId;
 
-        Like like = likeDao.findByPostAndUser(post, user)
+        Like like = likeDao.findById(likeId)
                         .orElseThrow(() -> new IllegalStateException("Like not found for the given post and user"));
 
         post.unlikePost(like);

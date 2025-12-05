@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CommentServiceImpl implements CommentService {
     private final CommentDao commentDao;
+    private final CommentLikeDao commentLikeDao;
     private final CommonDaoUtils utils;
     private final GlobalAccessValidationService accessValidationService;
 
@@ -123,7 +124,10 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void likeComment(String commentId, UserDetails userDetails) {
         Comment comment = findCommentById(commentId);
-        comment.likeComment();
+        ProfileEntity user = utils.returnProfileFromUsername(userDetails.getUsername());
+
+        CommentLike like = new CommentLike(comment, user);
+        comment.likeComment(like);
         commentDao.save(comment);
     }
 
@@ -131,7 +135,12 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void unlikeComment(String commentId, UserDetails userDetails) {
         Comment comment = findCommentById(commentId);
-        comment.likeComment();
+        ProfileEntity user = utils.returnProfileFromUsername(userDetails.getUsername());
+
+        CommentLike commentLike = commentLikeDao.findByCommentIdAndUserId(commentId, user.getProfileId())
+                .orElseThrow(() -> new IllegalStateException("Like not found for the given comment and user"));
+
+        comment.unlikeComment(commentLike);
         commentDao.save(comment);
     }
 
