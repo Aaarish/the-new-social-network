@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class Repost {
     @Id
     @Column(name = "id", nullable = false, unique = true, updatable = false)
-    private String id;
+    private String repostId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
@@ -45,7 +45,7 @@ public class Repost {
     }
 
     public Repost(Post post, ProfileEntity user, ShareType shareType) {
-        this.id = post.getPostId() + "_" + user.getProfileId();
+        this.repostId = post.getPostId() + "_" + user.getProfileId();
         this.post = post;
         this.user = user;
         this.shareType = shareType;

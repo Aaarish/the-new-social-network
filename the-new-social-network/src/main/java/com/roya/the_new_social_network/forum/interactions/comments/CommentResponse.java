@@ -16,7 +16,7 @@ import lombok.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentResponse {
     @JsonProperty(value = "comment_id")
-    private String id;
+    private String commentId;
 
     @JsonProperty(value = "comment")
     private String content;
@@ -75,7 +75,7 @@ public class CommentResponse {
     // Factory method with optional replies
     public static CommentResponse fromEntity(Comment comment, boolean includeReplies) {
         CommentResponseBuilder builder = CommentResponse.builder()
-                .id(comment.getId())
+                .commentId(comment.getCommentId())
                 .content(comment.getContent())
                 .user(UserSummary.builder()
                         .id(comment.getUser().getProfileId())
@@ -94,7 +94,7 @@ public class CommentResponse {
 
         // Add main comment ID if this is a reply
         if (comment.isReply()) {
-            builder.mainCommentId(comment.getMainComment().getId());
+            builder.mainCommentId(comment.getMainComment().getCommentId());
         }
 
         // Add replies if requested and this is a main comment
