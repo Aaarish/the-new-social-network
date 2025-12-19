@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ApprenticeshipServiceImpl implements ApprenticeshipService {
     private final ApprenticeDao apprenticeDao;
     private final MentorDao mentorDao;
@@ -36,23 +37,15 @@ public class ApprenticeshipServiceImpl implements ApprenticeshipService {
         if (existingMentorOptional.isPresent()) {
             mentor = existingMentorOptional.get();
 
-            if (mentor.hasApprentice(sourceProfile)) {
+            if (mentor.hasApprentice(sourceProfileId)) {
                 return;
             }
         } else {
-            mentor = Mentor.builder()
-                    .profile(targetProfile)
-                    .build();
-
-            mentor = mentorDao.save(mentor);
+            mentor = new Mentor(targetProfile);
         }
 
-        Apprentice apprentice = Apprentice.builder()
-                .profile(sourceProfile)
-                .mentor(mentor)
-                .build();
-
-        mentor.getApprentices().add(apprentice);
+        Apprentice apprentice = new Apprentice(sourceProfile, mentor);
+        mentor.addApprentice(apprentice);
         mentorDao.save(mentor);
     }
 
@@ -80,9 +73,7 @@ public class ApprenticeshipServiceImpl implements ApprenticeshipService {
     @Override
     public boolean hasApprenticeship(String apprenticeProfileId, String mentorProfileId) {
         Mentor mentor = getMentorFromProfile(mentorProfileId);
-
-        return mentor.getApprentices().stream()
-                .anyMatch(apprentice -> apprentice.getProfile().getProfileId().equals(apprenticeProfileId));
+        return mentor.hasApprentice(apprenticeProfileId);
     }
 
     @Override
@@ -95,12 +86,6 @@ public class ApprenticeshipServiceImpl implements ApprenticeshipService {
     public List<Mentor> getMentorsOfApprentice(String apprenticeProfileId) {
         ProfileEntity profile = utils.returnProfileFromId(apprenticeProfileId);
         return profile.getMentors();
-    }
-
-
-    public boolean hasApprenticeship(ProfileEntity apprenticeProfile, Mentor mentor) {
-        return mentor.getApprentices().stream()
-                .anyMatch(apprentice -> apprentice.getProfile().equals(apprenticeProfile));
     }
 
     private Mentor getMentorFromProfile(String mentorProfileId) {

@@ -7,12 +7,15 @@ import com.roya.the_new_social_network.forum.posts.entities.*;
 import com.roya.the_new_social_network.forum.posts.dao.PostDao;
 import com.roya.the_new_social_network.forum.posts.enums.PostVisibility;
 import com.roya.the_new_social_network.forum.posts.enums.ProjectPostLabel;
+import com.roya.the_new_social_network.forum.posts.events.PostCreatedEvent;
 import com.roya.the_new_social_network.global.access.GlobalAccessValidationService;
 import com.roya.the_new_social_network.global.dto.GlobalDeleteResponse;
 import com.roya.the_new_social_network.global.utils.CommonDaoUtils;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.projects.ProjectEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +26,13 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class PostServiceImpl implements PostService {
     private final PostDao postDao;
     private final DiscussionOptionDao optionDao;
     private final CommonDaoUtils daoUtils;
     private final GlobalAccessValidationService accessValidationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     @Override
@@ -38,6 +43,9 @@ public class PostServiceImpl implements PostService {
         MediaPost savedPost = postDao.save(mediaPost);
 
 //        mongoTemplate.dump(post); needs to dump the post in the mongodb collection to store it without any index or whatever
+
+        log.info("media post created for user {} with post_id: {}", savedPost.getAuthor().getProfileId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
 
         return PostResponse.fromEntity(savedPost);
     }
@@ -51,6 +59,9 @@ public class PostServiceImpl implements PostService {
         MediaPost mediaPost = new MediaPost(author, project, postVisibility, postLabel, mediaPostRequest.getMediaUrl(), mediaPostRequest.getMedia(), mediaPostRequest.getCaption());
         MediaPost savedPost = postDao.save(mediaPost);
 
+        log.info("media post created for project {} with post_id: {}", savedPost.getProject().getProjectId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
+
         return PostResponse.fromEntity(savedPost);
     }
 
@@ -61,6 +72,9 @@ public class PostServiceImpl implements PostService {
 
         TextPost textPost = new TextPost(author, textPostRequest.getContent());
         TextPost savedPost = postDao.save(textPost);
+
+        log.info("text post created for user {} with post_id: {}", savedPost.getAuthor().getProfileId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
 
         return PostResponse.fromEntity(savedPost);
     }
@@ -74,6 +88,9 @@ public class PostServiceImpl implements PostService {
         TextPost textPost = new TextPost(author, project, postVisibility, postLabel, textPostRequest.getContent());
         TextPost savedPost = postDao.save(textPost);
 
+        log.info("text post created for project {} with post_id: {}", savedPost.getProject().getProjectId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
+
         return PostResponse.fromEntity(savedPost);
     }
 
@@ -84,6 +101,9 @@ public class PostServiceImpl implements PostService {
 
         BlogPost blogPost = new BlogPost(author, blogPostRequest.getTitle(), blogPostRequest.getCategory(), blogPostRequest.getContent(), blogPostRequest.getReadTime(), blogPostRequest.getMedia());
         BlogPost savedPost = postDao.save(blogPost);
+
+        log.info("blog post created for user {} with post_id: {}", savedPost.getAuthor().getProfileId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
 
         return PostResponse.fromEntity(savedPost);
     }
@@ -96,6 +116,9 @@ public class PostServiceImpl implements PostService {
 
         BlogPost blogPost = new BlogPost(author, project, postVisibility, postLabel, blogPostRequest.getTitle(), blogPostRequest.getCategory(), blogPostRequest.getContent(), blogPostRequest.getReadTime(), blogPostRequest.getMedia());
         BlogPost savedPost = postDao.save(blogPost);
+
+        log.info("blog post created for project {} with post_id: {}", savedPost.getProject().getProjectId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
 
         return PostResponse.fromEntity(savedPost);
     }
@@ -116,6 +139,10 @@ public class PostServiceImpl implements PostService {
         }
 
         DiscussionPost savedPost = postDao.save(discussionPost);
+
+        log.info("discussion post created for user {} with post_id: {}", savedPost.getAuthor().getProfileId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
+
         return PostResponse.fromEntity(savedPost);
     }
 
@@ -136,6 +163,10 @@ public class PostServiceImpl implements PostService {
         }
 
         DiscussionPost savedPost = postDao.save(discussionPost);
+
+        log.info("discussion post created for project {} with post_id: {}", savedPost.getProject().getProjectId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
+
         return PostResponse.fromEntity(savedPost);
     }
 
@@ -147,6 +178,9 @@ public class PostServiceImpl implements PostService {
 
         PamphletPost mediaPost = new PamphletPost(author, project, postVisibility, postLabel, pamphletPostRequest.getMediaUrl(), pamphletPostRequest.getMedia(), pamphletPostRequest.getCaption());
         PamphletPost savedPost = postDao.save(mediaPost);
+
+        log.info("pamphlet post created for project {} with post_id: {}", savedPost.getProject().getProjectId(), savedPost.getPostId());
+        sendPostCreatedEvent(savedPost);
 
         return PostResponse.fromEntity(savedPost);
     }
@@ -181,7 +215,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void editContentInTextPost(String postId, String newContent, String userId) {
         TextPost post = postDao.findByIdAndPostTypeAsText(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found or not a media post"));
+                .orElseThrow(() -> new IllegalArgumentException("Post not found or not a text post"));
 
         ProfileEntity user = daoUtils.returnProfileFromId(userId);
         accessValidationService.validateAccessToPost(user, post);
@@ -194,7 +228,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void addOptionInDiscussionPost(String postId, String option, String userId) {
         DiscussionPost post = postDao.findByIdAndPostTypeAsDiscussion(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found or not a media post"));
+                .orElseThrow(() -> new IllegalArgumentException("Post not found or not a discussion post"));
 
         ProfileEntity user = daoUtils.returnProfileFromId(userId);
         accessValidationService.validateAccessToPost(user, post);
@@ -207,7 +241,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void removeOptionFromDiscussionPost(String optionId, String userId) {
         DiscussionPost post = postDao.findByIdAndPostTypeAsDiscussion(optionId.split("_")[0])
-                .orElseThrow(() -> new IllegalArgumentException("Post not found or not a media post"));
+                .orElseThrow(() -> new IllegalArgumentException("Post not found or not a discussion post"));
 
         ProfileEntity user = daoUtils.returnProfileFromId(userId);
         accessValidationService.validateAccessToPost(user, post);
@@ -251,5 +285,10 @@ public class PostServiceImpl implements PostService {
                 .message("Post deleted successfully")
                 .deletedAt(LocalDateTime.now())
                 .build();
+    }
+
+    private void sendPostCreatedEvent(Post post) {
+        log.info("post-created-event sent for post_id: {}", post.getPostId());
+        eventPublisher.publishEvent(new PostCreatedEvent(this, post));
     }
 }

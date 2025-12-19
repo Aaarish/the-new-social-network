@@ -49,5 +49,6 @@ public interface PostDao extends JpaRepository<Post, String>, PostDaoCustom {
 
 //    List<Post> findByCategory(PreferenceCategory category);
 
-    List<Post> findFeedPostsForProfile(String profileId, int i, int i1, int i2, int i3);
+//    List<Post> findFeedPostsForProfile(String profileId, int i, int i1, int i2, int i3);
+
 }

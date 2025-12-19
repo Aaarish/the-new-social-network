@@ -1,7 +1,5 @@
 package com.roya.the_new_social_network.profiles;
 
-import com.roya.the_new_social_network.profiles.api.dto.ProfileRequest;
-import com.roya.the_new_social_network.profiles.api.dto.request.PreferenceRequest;
 import com.roya.the_new_social_network.profiles.api.dto.request.UpdateProfileRequest;
 import com.roya.the_new_social_network.profiles.api.dto.response.ProfileApprenticesResponse;
 import com.roya.the_new_social_network.profiles.api.dto.response.ProfileCreatedProjectsResponse;
@@ -34,9 +32,9 @@ public interface ProfileService {
 
     List<Preference> getProfilePreferences(String profileId);
 
-    void addPreference(String profileId, PreferenceRequest prefRequest);
+//    void addPreference(String profileId, PreferenceRequest prefRequest);
 
-    void removePreference(String profileId, String preferenceId);
+//    void removePreference(String profileId, String preferenceId);
 
 //    List<Post> getProfilePosts(String profileId, int page, int size);
 

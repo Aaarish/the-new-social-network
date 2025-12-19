@@ -1,4 +1,4 @@
-package com.roya.the_new_social_network.profiles.api.dto.request;
+package com.roya.the_new_social_network.forum.feed.preferences;
 
 import lombok.*;
 
@@ -9,7 +9,6 @@ import lombok.*;
 @Builder
 public class PreferenceRequest {
     private String category;
-    private Integer interestLevel;
-    private String description;
+    private Integer level;
 
 }

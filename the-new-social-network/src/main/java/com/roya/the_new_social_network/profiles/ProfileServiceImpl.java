@@ -2,8 +2,6 @@ package com.roya.the_new_social_network.profiles;
 
 import com.roya.the_new_social_network.apprenticeship.api.dto.response.ApprenticeInfo;
 import com.roya.the_new_social_network.apprenticeship.api.dto.response.MentorInfo;
-import com.roya.the_new_social_network.global.enums.PreferenceCategory;
-import com.roya.the_new_social_network.profiles.api.dto.request.PreferenceRequest;
 import com.roya.the_new_social_network.profiles.api.dto.request.UpdateProfileRequest;
 import com.roya.the_new_social_network.profiles.api.dto.response.*;
 import com.roya.the_new_social_network.profiles.preferences.Preference;
@@ -147,34 +145,34 @@ public class ProfileServiceImpl implements ProfileService {
         return null;
     }
 
-    @Override
-    @Transactional
-    public void addPreference(String profileId, PreferenceRequest prefRequest) {
-        ProfileEntity profile = returnProfileFromId(profileId);
+//    @Override
+//    @Transactional
+//    public void addPreference(String profileId, PreferenceRequest prefRequest) {
+//        ProfileEntity profile = returnProfileFromId(profileId);
+//
+//        Preference preference = Preference.builder()
+//                .category(PreferenceCategory.valueOf(prefRequest.getCategory()))
+//                .profile(profile)
+//                .build();
+//
+//        if (prefRequest.getInterestLevel() != null) preference.setInterestLevel(prefRequest.getInterestLevel());
+//        if (prefRequest.getDescription() != null) preference.setDescription(prefRequest.getDescription());
+//
+//        profile.getPreferences().add(preference);
+//    }
 
-        Preference preference = Preference.builder()
-                .category(PreferenceCategory.valueOf(prefRequest.getCategory()))
-                .profile(profile)
-                .build();
-
-        if (prefRequest.getInterestLevel() != null) preference.setInterestLevel(prefRequest.getInterestLevel());
-        if (prefRequest.getDescription() != null) preference.setDescription(prefRequest.getDescription());
-
-        profile.getPreferences().add(preference);
-    }
-
-    @Override
-    @Transactional
-    public void removePreference(String profileId, String preferenceId) {
-        ProfileEntity profile = returnProfileFromId(profileId);
-
-        for (Preference pref : profile.getPreferences()) {
-            if (pref.getPrefId().toString().equals(preferenceId)) {
-                profile.getPreferences().remove(pref);
-                break;
-            }
-        }
-    }
+//    @Override
+//    @Transactional
+//    public void removePreference(String profileId, String preferenceId) {
+//        ProfileEntity profile = returnProfileFromId(profileId);
+//
+//        for (Preference pref : profile.getPreferences()) {
+//            if (pref.getPrefId().toString().equals(preferenceId)) {
+//                profile.getPreferences().remove(pref);
+//                break;
+//            }
+//        }
+//    }
 
     private ProfileEntity returnProfileFromId(String profileId) {
         return profileDao.findById(profileId)

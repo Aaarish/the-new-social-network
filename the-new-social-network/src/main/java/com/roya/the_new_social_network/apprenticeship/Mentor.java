@@ -13,8 +13,7 @@ import java.util.List;
 @Getter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Mentor {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", nullable = false)
     private String mentorId;
 
     @ManyToOne
@@ -22,12 +21,17 @@ public class Mentor {
     private ProfileEntity profile;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "mentor", orphanRemoval = true)
-    @Builder.Default
-    private List<Apprentice> apprentices = new ArrayList<>();
+    private List<Apprentice> apprentices;
 
     private LocalDateTime createdAt;
 
     @Setter private LocalDateTime lastUpdatedAt;
+
+    public Mentor(ProfileEntity profile) {
+        this.mentorId = profile.getProfileId();
+        this.profile = profile;
+        this.createdAt = LocalDateTime.now();
+    }
 
     public void addApprentice(Apprentice apprentice) {
         if (apprentices == null) {
@@ -48,12 +52,12 @@ public class Mentor {
         return apprentices != null ? apprentices.size() : 0;
     }
 
-    public boolean hasApprentice(ProfileEntity profile) {
+    public boolean hasApprentice(String profileId) {
         if (apprentices == null || profile == null) {
             return false;
         }
         return apprentices.stream()
-                .anyMatch(a -> a.getProfile().getProfileId().equals(profile.getProfileId()));
+                .anyMatch(a -> a.getProfile().getProfileId().equals(profileId));
     }
 
 }
