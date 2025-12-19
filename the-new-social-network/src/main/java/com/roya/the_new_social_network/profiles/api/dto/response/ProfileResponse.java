@@ -17,7 +17,6 @@ public class ProfileResponse {
     private String bio;
     private Long contact;
     private String profileUrl;
-    private int preferenceCount;
     private int postCount;
     private int projectMembershipCount;
     private int apprenticeCount;

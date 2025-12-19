@@ -15,12 +15,12 @@ public class Preference {
     // currently prevalent recommendation algorithms that drains the users and lead to brain rot.
 
     @Id
-    @Column(name = "id", unique = true, nullable = false, updatable = false)
-    private String prefId = generatePreferenceId();
+    @Column(name = "id", nullable = false)
+    private String prefId;
 
-    private String generatePreferenceId() {
-        return this.category.getPrefId() + "__" + this.getProfile().getProfileId();
-    }
+//    private String generatePreferenceId() {
+//        return this.category.getPrefId() + "__" + this.getProfile().getProfileId();
+//    }
 
     @Enumerated(EnumType.STRING)
     private PreferenceCategory category;
@@ -28,9 +28,8 @@ public class Preference {
     @Builder.Default
     @Setter private Integer interestLevel = 5; // 0 to 10
 
-    @Setter private String description;
-
     @ManyToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id", nullable = false)
     private ProfileEntity profile;
+
 }

@@ -1,5 +1,6 @@
 package com.roya.the_new_social_network.auth;
 
+import com.roya.the_new_social_network.forum.feed.FeedEntity;
 import com.roya.the_new_social_network.profiles.ProfileDao;
 import com.roya.the_new_social_network.profiles.ProfileEntity;
 import com.roya.the_new_social_network.profiles.ProfileService;
@@ -55,7 +56,7 @@ public class AuthService {
     private ProfileEntity createProfileRequest(AuthDto.RegisterRequest request) {
         String profileUrl = "www.roya.com/" + request.getUsername();
 
-        return ProfileEntity.builder()
+        ProfileEntity profile = ProfileEntity.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -65,6 +66,9 @@ public class AuthService {
                 .profileUrl(profileUrl)
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        new FeedEntity(profile);
+        return profile;
     }
 
     @Transactional

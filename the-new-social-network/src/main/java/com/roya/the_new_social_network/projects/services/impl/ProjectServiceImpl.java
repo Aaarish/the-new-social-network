@@ -42,15 +42,13 @@ public class ProjectServiceImpl implements ProjectService {
         ValidRequestResponse valid = validateWriteRequest(profileId, projectId);
 
         if (valid.isAuthorized)
-            throw new RuntimeException("Unauthorized to update this project");
+            throw new IllegalStateException("Unauthorized to update this project");
 
         ProjectEntity project = valid.project;
 
-        if (requestDto.getTitle() != null) project.setTitle(requestDto.getTitle());
-        if (requestDto.getCategory() != null) project.setCategory(requestDto.getCategory());
-        if (requestDto.getDescription() != null) project.setDescription(requestDto.getDescription());
-        if (requestDto.getStatus() != null) project.setStatus(requestDto.getStatus());
-        if (requestDto.getProjectJoiningStrategy() != null) project.setProjectJoiningVisibility(requestDto.getProjectJoiningStrategy());
+        project.editProjectDetails(List.of(requestDto.getTitle(), requestDto.getDescription(), requestDto.getCategory()));
+        if (requestDto.getStatus() != null) project.changeStatus(requestDto.getStatus());
+        if (requestDto.getProjectJoiningStrategy() != null) project.changeJoiningVisibility(requestDto.getProjectJoiningStrategy());
 
         return projectDao.save(project);
     }
